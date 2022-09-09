@@ -1,3 +1,14 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: tayeo <tayeo@student.42.fr>                +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/09/09 17:06:19 by tayeo             #+#    #+#              #
+#    Updated: 2022/09/09 17:06:23 by tayeo            ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
 NAME1 = server
 
@@ -23,11 +34,11 @@ $(LIBFT):
 	make -C libft
 clean:
 	rm -f server
+	rm -f client
 	make clean -C lib
 	make clean -C libft
 
 fclean: clean
-	rm -f server
 	make fclean -C lib
 	make fclean -C libft
 
