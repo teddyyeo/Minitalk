@@ -6,31 +6,12 @@
 /*   By: tayeo <tayeo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 19:33:58 by tayeo             #+#    #+#             */
-/*   Updated: 2022/09/09 17:07:08 by tayeo            ###   ########.fr       */
+/*   Updated: 2022/09/09 17:37:24 by tayeo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 #include <stdio.h> //TODO remove!!!!!!!!!!
-
-void	 showbit(char c)
-{
-	char	b = c;
-
-	for (int i = 0; i < 8; i++)
-	{
-		if ((b & 128) == 128)
-		{
-			write(1, "1", 2);
-		}
-		else
-		{
-			write(1, "0", 2);
-		}
-		b = b << 1;
-	}
-	write(1, "\n", 2);
-}
 
 size_t	size_handler(int sig, char bit_idx)
 {
@@ -71,7 +52,7 @@ char	*str_handler(int sig, char *str, size_t len)
 		str++;
 		if (l == len)
 		{
-			printf("%s\n", start);
+			write(1, start, len);
 			free(start);
 			start = NULL;
 			str = NULL;
@@ -94,6 +75,7 @@ void	handler(int sig)
 		bit_idx++;
 		if (bit_idx == 32)
 		{
+			printf("len: %zu\n", len);
 			size_flag = 1;
 			bit_idx = 0;
 		}

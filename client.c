@@ -6,7 +6,7 @@
 /*   By: tayeo <tayeo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 19:32:24 by tayeo             #+#    #+#             */
-/*   Updated: 2022/09/09 16:47:15 by tayeo            ###   ########.fr       */
+/*   Updated: 2022/09/09 17:20:35 by tayeo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ void	send_string(char *str, int pid)
 			if ((*str & 128) == 128)
 			{
 				kill(pid, SIGUSR1);
-				usleep(30);
+				usleep(50);
 			}
 			else
 			{
 				kill(pid, SIGUSR2);
-				usleep(30);
+				usleep(50);
 			}
 			*str = *str << 1;
 		}
@@ -41,12 +41,12 @@ void	send_size(size_t len, int pid)
 		if ((len & 2148473648UL) == 2147483648UL)
 		{
 			kill(pid, SIGUSR1);
-			usleep(30);
+			usleep(50);
 		}
 		else
 		{
 			kill(pid, SIGUSR2);
-			usleep(30);
+			usleep(50);
 		}
 		len = len << 1;
 	}
