@@ -6,14 +6,14 @@
 /*   By: tayeo <tayeo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 19:33:58 by tayeo             #+#    #+#             */
-/*   Updated: 2022/09/07 21:59:03 by tayeo            ###   ########.fr       */
+/*   Updated: 2022/09/09 16:55:51 by tayeo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 #include <stdio.h> //TODO remove!!!!!!!!!!
 
-void showbit(char c)
+void	 showbit(char c)
 {
 	char	b = c;
 
@@ -32,10 +32,12 @@ void showbit(char c)
 	write(1, "\n", 2);
 }
 
-size_t	size_handler(int sig)
+size_t	size_handler(int sig, char bit_idx)
 {
 	static size_t	len;
 
+	if (bit_idx == 0)
+		len = 0;
 	if (sig == SIGUSR1)
 	{
 		len = len << 1;
@@ -54,14 +56,6 @@ char	*str_handler(int sig, char *str, size_t len)
 
 	if (start == NULL)
 		start = str;
-	if (bit_idx == 8)
-	{
-		l++;
-		if (l == len)
-			printf("%s\n", start);
-		bit_idx = 0;
-		str++;
-	}
 	if (sig == SIGUSR1)
 	{
 		*str = *str << 1;
@@ -70,31 +64,46 @@ char	*str_handler(int sig, char *str, size_t len)
 	if (sig == SIGUSR2)
 		*str = *str << 1;
 	bit_idx++;
+	if (bit_idx == 8)
+	{
+		l++;
+		bit_idx = 0;
+		str++;
+		if (l == len)
+		{
+			printf("%s\n", start);
+			free(start);
+			start = NULL;
+			str = NULL;
+			l = 0;
+		}
+	}
 	return (str);
 }
 
 void	handler(int sig)
 {
-	static char	size_flag;
-	static char	bit_idx;
-	static char	*str;
-	size_t		len;
+	static char		size_flag;
+	static char		bit_idx;
+	static char		*str;
+	static size_t	len;
 
-	len = 0;
 	if (bit_idx < 32 && size_flag == 0)
 	{
-		len = size_handler(sig);
+		len = size_handler(sig, bit_idx);
 		bit_idx++;
 		if (bit_idx == 32)
 		{
-			printf("len: %zu\n", len);
 			size_flag = 1;
+			bit_idx = 0;
 		}
 		return ;
 	}
 	if (str == NULL)
 		str = malloc(len + 1);
-	str = str_handler(sig, str, len + 1);
+	str = str_handler(sig, str, len);
+	if (str == NULL)
+		size_flag = 0;
 }
 
 int	main(void)
