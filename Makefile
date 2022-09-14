@@ -23,11 +23,11 @@ $(LIBFT):
 	make -C libft
 clean:
 	rm -f server
+	rm -f client
 	make clean -C lib
 	make clean -C libft
 
 fclean: clean
-	rm -f server
 	make fclean -C lib
 	make fclean -C libft
 

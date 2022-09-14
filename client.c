@@ -6,7 +6,7 @@
 /*   By: tayeo <tayeo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 19:32:24 by tayeo             #+#    #+#             */
-/*   Updated: 2022/09/07 21:10:01 by tayeo            ###   ########.fr       */
+/*   Updated: 2022/09/14 19:10:25 by tayeo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,43 +14,40 @@
 
 void	send_string(char *str, int pid)
 {
+	int	i;
+
+	i = 0;
 	while (*str)
 	{
-		for (int i = 0; i < 8; i++)
+		i = 0;
+		while (i < 8)
 		{
-			if((*str & 128) == 128)
-			{
+			if ((*str & 128) == 128)
 				kill(pid, SIGUSR1);
-				usleep(100);
-			}
 			else
-			{
 				kill(pid, SIGUSR2);
-				usleep(100);
-			}
+			usleep(30);
 			*str = *str << 1;
+			i++;
 		}
 		str++;
 	}
 }
 
-void send_size(size_t len, int pid)
+void	send_size(size_t len, int pid)
 {
-	for (int i = 0; i < 32; i++)
+	int	i;
+
+	i = 0;
+	while (i < 32)
 	{
 		if ((len & 2148473648UL) == 2147483648UL)
-		{
-			write(1, "1", 1);
 			kill(pid, SIGUSR1);
-			usleep(100);
-		}
 		else
-		{
-			write(1, "0", 1);
 			kill(pid, SIGUSR2);
-			usleep(100);
-		}
+		usleep(30);
 		len = len << 1;
+		i++;
 	}
 }
 
@@ -61,10 +58,15 @@ int	main(int argc, char **argv)
 
 	if (argc != 3)
 	{
-		ft_printf("Argument Error\n");
+		write(1, "Argument Error\n", 15);
 		return (0);
 	}
 	pid = ft_atoi(argv[1]);
+	if (pid > 99998)
+	{
+		write(1, "PID error\n", 10);
+		return (0);
+	}
 	len = ft_strlen(argv[2]);
 	send_size(len, pid);
 	send_string(argv[2], pid);
